@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A tale of two research questions — Jack Marsden</title>
+  <meta name="description" content="On marginal vs conditional odds ratios, non-collapsibility, and why your OR changed when you added a covariate.">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+</head>
+<body>
+
+<div class="site">
+
+  <div class="post-page-header">
+    <h1>A tale of two <s>cities</s> research questions</h1>
+    <div class="post-meta">
+      <span class="post-date">October 2026</span>
+      <span class="post-tag">Methods</span>
+    </div>
+  </div>
+
+  <div class="post-content">
+
+    <p>One of my burning passion lecture topics is the naming of things in statistics, or more specifically, the poor naming of things in statistics. Names often don't make sense, and are wrapped up in field-specific jargon, be it econometrics jargon, epidemiological jargon, or mathematical jargon. That all serves very well to make ourselves feel very clever for understanding at least some of these words, but doesn't really serve anyone else. Particularly when the concepts behind the words are more intuitive than the opaque names suggest.</p>
+
+    <p>Today I'm writing about two such words: marginal and conditional. These words are often bandied around in research conversations, with little care being set aside for what they mean, or how they differ. So I'm going to try and clear up that (and perhaps a little more).</p>
+
+    <p>The most prevalent example of this distinction, and my running example for the day, is a good old-fashioned logistic regression. If you've worked in quantitative research, you've probably done one. If you've taken a stats class, same. Even if you don't but you have a passing familiarity with quantitative research, I'm going to hazard a guess you've heard of an odds ratio (OR) before (odds ratios being the generally reported results of logistic regressions).</p>
+
+    <p>So here's two scenarios:</p>
+
+    <p><strong>A)</strong> You run a logistic regression, regressing some binary outcome Y on some continuous predictor X. You get an OR relating to the effect of a 1-unit increase in X on the odds of Y being a 1 instead of a 0. You run another regression, this time adjusting for some covariate A. The OR associated with a 1-unit increase in X changes. But you have absolute theoretical certainty that covariate A is not at all associated with your predictor X. So how could it possibly change the estimated effect of X on Y? And which one was right?</p>
+
+    <p><strong>B)</strong> You run a multilevel logistic regression (say, <code>glmer</code> in R or <code>melogit</code> in Stata) to account for some form of clustering, and you get an OR. Someone in the research team recently read about generalised estimating equations (GEEs) for addressing the same issue (clustered data). You run a GEE model with the same fixed effects and clustering structure, but the OR is substantially changed. Which one was right?</p>
+
+    <p>The same thing is happening in both scenarios, and I hope you'll forgive me but to explain why I'm going to invoke another overly technical word. What's happening in both scenarios is due to the odds ratio's non-collapsibility.</p>
+
+    <p>The fundamental principle is that in both scenarios, both ORs are correct; what's changed between them is the implicit research question being asked by each model. To demonstrate non-collapsibility at play, here's an example from Fitzmaurice, Laird and Ware's <em>Applied Longitudinal Data Analysis</em>:</p>
+
+    <p>An RCT is randomised across some stratified binary risk factor L, where the probability of getting condition Y based on treatment A &amp; risk factor L can be expressed as:</p>
+
+    <table>
+      <thead>
+        <tr><th></th><th>P(Y = 1 | A = 0)</th><th>P(Y = 1 | A = 1)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>L = 0 (low risk)</td><td>0.20</td><td>0.50</td></tr>
+        <tr><td>L = 1 (high risk)</td><td>0.50</td><td>0.80</td></tr>
+      </tbody>
+    </table>
+
+    <p>If we allocate 500 participants to each group at each risk level (2000 total), we would expect the following outcomes on average:</p>
+
+    <table>
+      <thead>
+        <tr><th>L</th><th>A</th><th>Events</th><th>Non-events</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>0</td><td>0</td><td>100</td><td>400</td></tr>
+        <tr><td>0</td><td>1</td><td>250</td><td>250</td></tr>
+        <tr><td>1</td><td>0</td><td>250</td><td>250</td></tr>
+        <tr><td>1</td><td>1</td><td>400</td><td>100</td></tr>
+      </tbody>
+    </table>
+
+    <p>Within each level of L, we can manually calculate odds ratios with some quick arithmetic: OR = (250 &times; 400) / (100 &times; 250) = 4 when L = 0, and (400 &times; 250) / (250 &times; 100) = 4 when L = 1. So each within-strata OR is 4 (in each stratum, the odds of an intervention participant having an event is 4&times; that of a control participant).</p>
+
+    <p>When we collapse this table across strata, we get the following table:</p>
+
+    <table>
+      <thead>
+        <tr><th>A</th><th>Events</th><th>Non-events</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>0</td><td>350</td><td>650</td></tr>
+        <tr><td>1</td><td>650</td><td>350</td></tr>
+      </tbody>
+    </table>
+
+    <p>So in our population, we can calculate the OR as (650 &times; 650) / (350 &times; 350) = 3.449...</p>
+
+    <p>Distinctly lower than 4, which it was in each stratum. Seems strange?</p>
+
+    <p>This is what non-collapsibility implies: for ORs, by collapsing the table, we are actually changing the question. In the collapsed table, we are asking a question about our whole population. This is our <strong>marginal</strong> question. In the stratified table we are asking a question about anyone within a given stratum. This is our <strong>conditional</strong> question. These are equivalent questions in a single, unadjusted logistic model, because the model cannot distinguish between members of the population beyond the predictor of interest. As soon as we incorporate anything which stratifies the population (covariates, or random effects introduced by clustering), the questions become distinct.</p>
+
+    <p>To demonstrate this in a more visual sense, and in a random-intercept clustered-data context, observe the following visualisation of three different clustered datasets with identical conditional ORs, but different levels of clustering.</p>
+
+    <figure>
+      <img src="images/marginal_conditional_curves.png" alt="Three panels showing S-shaped logistic curves. As clustering increases (left to right), the marginal (blue) curve flattens while the conditional (orange dashed) curve stays the same." style="width: 100%; border-radius: 6px;">
+    </figure>
+
+    <p>As the clustering gets stronger (higher ICC, cluster-specific intercepts are more distinct), the blue curve (our marginal OR) flattens, but the red dotted curve (conditional OR) stays the same, as the OR within each cluster is the same. The marginal distribution is averaging all of the curves, and the more heterogeneous those curves are the flatter this "average curve" will necessarily become. This is due to the S-shaped nature of the curves. Averaging over S-shaped curves will always make a flatter curve, which in this context means pulling the OR towards 1. This is why marginal estimates will always be closer to an OR of 1 (i.e. a null effect) than the corresponding conditional effects.</p>
+
+    <p>The particular S-shaped curves of these probabilities are due to the mathematical transformation the probabilities undergo in a logistic regression &mdash; the logit link function. For some linear predictor $\eta$ (a weighted sum of the model terms), the logistic model says the probability of the outcome is $P = 1/(1 + \exp(-\eta))$. This is the inverse logit (or "expit") function, and it's what gives us those S-shaped curves. Logistic models make $\eta$ a linear function of the predictors &mdash; it's the log-odds that are linear, not the probability itself. In the language of generalised linear models, this transformation is the link function.</p>
+
+    <p>This is different in linear regression of continuous outcomes. If we take a linear regression model $Y = a + bX_1 + cX_2 + \ldots$, no combination of covariates will change the raw effect of a 1-unit increase in $X_1$ on $Y$ (the coefficient $b$). If, instead of modelling $Y$ directly, we model the log-odds of $Y$ through the logit link, then the effect of a 1-unit increase in $X$ on the log-odds doesn't depend on the covariates &mdash; but the effect of a 1-unit increase in $X$ on the <em>probability</em> itself does. This is all a property of a known inequality in probability, Jensen's inequality.</p>
+
+    <p>Jensen's inequality states that for any convex function $f$, $f(E[X]) \leq E[f(X)]$. Our S-curves are the inverse logit function, which is convex below its midpoint and concave above. When we average over a population whose individual curves are shifted up and down (by covariates, or by random effects), the averaging process interacts with this curvature. The result is that the averaged curve &mdash; our marginal estimate &mdash; is always flatter than any individual curve. The same idea explains our 2&times;2&times;2 table: computing the odds ratio from the pooled (averaged) probabilities gives a different answer than averaging the within-stratum odds ratios, because the odds function $p/(1-p)$ is itself convex. In keeping with the inequality, our conditional OR is always further from 1 than our marginal OR.</p>
+
+  </div>
+
+  <a class="back-link" href="../">&larr; Back</a>
+
+</div>
+
+</body>
+</html>

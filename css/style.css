@@ -1,0 +1,349 @@
+:root {
+  --text: #1a1a1a;
+  --text-secondary: #555;
+  --text-muted: #888;
+  --accent: #2563eb;
+  --accent-bg: #eff6ff;
+  --border: #e5e5e5;
+  --bg: #fff;
+  --surface: #f9f9f9;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #e5e5e5;
+    --text-secondary: #aaa;
+    --text-muted: #777;
+    --accent: #60a5fa;
+    --accent-bg: #1e293b;
+    --border: #333;
+    --bg: #111;
+    --surface: #1a1a1a;
+  }
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+.site {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem 3rem;
+}
+
+/* header */
+.site-header { margin-bottom: 3rem; }
+
+.site-header h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
+}
+
+.site-header .bio {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.site-header .bio p { margin-bottom: 0.75rem; }
+.site-header .bio p:last-child { margin-bottom: 0; }
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  font-size: 0.875rem;
+}
+
+.links a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.links a:hover { text-decoration: underline; }
+
+.disclaimer {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 1rem;
+  font-style: italic;
+}
+
+/* sections */
+.section {
+  margin-bottom: 3rem;
+}
+
+.section-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+}
+
+/* post list */
+.post {
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.post:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.post-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.375rem;
+}
+
+.post-date {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.post-tag {
+  font-size: 0.75rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 4px;
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.post-tag.neutral {
+  background: var(--surface);
+  color: var(--text-secondary);
+}
+
+.post-title {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  margin-bottom: 0.375rem;
+  letter-spacing: -0.01em;
+}
+
+.post-title a {
+  color: var(--text);
+  text-decoration: none;
+}
+
+.post-title a:hover { color: var(--accent); }
+
+.post-excerpt {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.read-more {
+  font-size: 0.8125rem;
+  color: var(--accent);
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+
+.read-more:hover { text-decoration: underline; }
+
+.all-posts {
+  font-size: 0.8125rem;
+  color: var(--accent);
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+
+/* publications */
+.pub {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.625rem;
+  line-height: 1.6;
+}
+
+.pub em { font-style: italic; }
+
+.pub a {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.75rem;
+}
+
+.pub a:hover { text-decoration: underline; }
+
+.scholar-link {
+  font-size: 0.8125rem;
+  color: var(--accent);
+  text-decoration: none;
+  margin-top: 0.5rem;
+  display: inline-block;
+}
+
+/* software */
+.tool {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.tool-name {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.tool-desc {
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+}
+
+/* footer */
+.site-footer {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* post page */
+.post-page-header {
+  margin-bottom: 2rem;
+}
+
+.post-page-header h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+
+.post-page-header .post-meta {
+  margin-bottom: 0;
+}
+
+.post-content {
+  font-size: 1rem;
+  color: var(--text);
+  line-height: 1.8;
+}
+
+.post-content p { margin-bottom: 1.25rem; }
+
+.post-content h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.post-content h3 {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.post-content code {
+  font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, monospace;
+  font-size: 0.875em;
+  background: var(--surface);
+  padding: 0.125rem 0.375rem;
+  border-radius: 3px;
+}
+
+.post-content pre {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1rem;
+  overflow-x: auto;
+  margin-bottom: 1.25rem;
+}
+
+.post-content pre code {
+  background: none;
+  padding: 0;
+}
+
+.post-content blockquote {
+  border-left: 3px solid var(--border);
+  padding-left: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.25rem;
+}
+
+.post-content ul, .post-content ol {
+  margin-bottom: 1.25rem;
+  padding-left: 1.5rem;
+}
+
+.post-content li { margin-bottom: 0.375rem; }
+
+.post-content table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  margin-bottom: 1.25rem;
+}
+
+.post-content th, .post-content td {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  text-align: left;
+}
+
+.post-content th {
+  font-weight: 600;
+  background: var(--surface);
+}
+
+.post-content figure {
+  margin: 1.5rem 0;
+}
+
+.post-content figure img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.post-content s {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.back-link {
+  font-size: 0.875rem;
+  color: var(--accent);
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 2rem;
+}
+
+.back-link:hover { text-decoration: underline; }
+
+/* empty state */
+.empty-state {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+@media (max-width: 640px) {
+  .site { padding: 2.5rem 1rem 2rem; }
+  .site-header h1 { font-size: 1.625rem; }
+}
